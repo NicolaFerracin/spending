@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const passport = require('passport');
 const routes = require('./routes');
+require('./passport');
 
 const app = express();
 
@@ -10,6 +11,9 @@ app.use(require('body-parser').urlencoded({ extended: true }));
 app.use(
   require('express-session')({ secret: process.env.SECRET, resave: true, saveUninitialized: true })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', routes);
 
