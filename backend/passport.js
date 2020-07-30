@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
+const User = require('./models/User');
 
 const opts = {
   secretOrKey: process.env.JWT_SECRET,
@@ -20,19 +21,20 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: '/auth/callback'
     },
-    function(accessToken, refreshToken, profile, cb) {
-      // TODO create or check user existence
-      const user = { email: profile._json.email, name: profile._json.name };
+    async (accessToken, refreshToken, profile, cb) => {
+      let user = await User.findOne({ email: profile._json.email }).exec();
+      if (!user) {
+        user = await User.create({ email: profile._json.email, name: profile._json.name });
+      }
       return cb(null, user);
     }
   )
 );
 
 passport.use(
-  new JwtStrategy(opts, function(jwt, done) {
-    // TODO check user
-    // return done(null, false);
-    return done(null, jwt);
+  new JwtStrategy(opts, async (jwt, done) => {
+    const user = await User.findById(jwt.user._id).exec();
+    return done(null, !!user ? jwt : false);
   })
 );
 

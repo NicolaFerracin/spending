@@ -10,7 +10,7 @@ router.get('/auth', passport.authenticate('google', { scope: ['profile', 'email'
 router.get('/auth/callback', passport.authenticate('google'), (req, res) => {
   const token = jwt.sign(
     {
-      ...req.user
+      user: req.user
     },
     process.env.JWT_SECRET,
     { expiresIn: '7d' }
@@ -20,7 +20,6 @@ router.get('/auth/callback', passport.authenticate('google'), (req, res) => {
   res.redirect(process.env.FRONTEND_URL);
 });
 
-// TODO use failureRedirect for unauthorized requests
 const jwtMiddleware = passport.authenticate('jwt', { session: false });
 
 router.get('/private', jwtMiddleware, (req, res) => {
