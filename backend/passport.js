@@ -2,16 +2,16 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 
-const opts = {};
-opts.jwtFromRequest = req => {
-  console.log(req.cookies['jwt']);
-  let token = null;
-  if (req && req.cookies) {
-    token = req.cookies['jwt'];
+const opts = {
+  secretOrKey: process.env.JWT_SECRET,
+  jwtFromRequest: req => {
+    let token = null;
+    if (req && req.cookies) {
+      token = req.cookies['jwt'];
+    }
+    return token;
   }
-  return token;
 };
-opts.secretOrKey = process.env.JWT_SECRET;
 
 passport.use(
   new GoogleStrategy(

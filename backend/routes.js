@@ -17,14 +17,14 @@ router.get('/auth/callback', passport.authenticate('google'), (req, res) => {
   );
 
   res.cookie('jwt', token);
-  res.redirect('/');
+  res.redirect(process.env.FRONTEND_URL);
 });
 
 // TODO use failureRedirect for unauthorized requests
 const jwtMiddleware = passport.authenticate('jwt', { session: false });
 
 router.get('/private', jwtMiddleware, (req, res) => {
-  res.send(`Welcome ${req.user.name}`);
+  res.json({ message: `Welcome ${req.user.name}` });
 });
 
 module.exports = router;
