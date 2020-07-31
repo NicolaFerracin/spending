@@ -3,6 +3,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const Entry = require('./models/Entry');
+const Category = require('./models/Category');
 
 const jwtMiddleware = passport.authenticate('jwt', { session: false });
 
@@ -19,25 +20,35 @@ router.get('/profile', jwtMiddleware, (req, res) => {
   res.json({ user: req.user });
 });
 
+// get all
 router.get('/api/entries', jwtMiddleware, async (req, res) => {
   const entries = await Entry.find({ user: req.user });
   res.json({ entries });
 });
-router.get('/api/categories', jwtMiddleware);
+router.get('/api/categories', jwtMiddleware, async (req, res) => {
+  const categories = await Category.find({ user: req.user });
+  res.json({ categories });
+});
 router.get('/api/methods', jwtMiddleware);
 
+// get single
 router.get('/api/entries/:id', jwtMiddleware, async (req, res) => {
   const entry = await Entry.findOne({ _id: req.params.id, user: req.user });
   res.json({ entry });
 });
 
+// create
 router.post('/api/entries', jwtMiddleware, async (req, res) => {
   const entry = await Entry.create({ ...req.body, user: req.user });
   res.json({ entry });
 });
-router.post('/api/categories', jwtMiddleware);
+router.post('/api/categories', jwtMiddleware, async (req, res) => {
+  const category = await Category.create({ name: req.body.name, user: req.user });
+  res.json({ category });
+});
 router.post('/api/methods', jwtMiddleware);
 
+// update
 router.put('/api/entries/:id', jwtMiddleware, async (req, res) => {
   const entry = await Entry.findOneAndUpdate(
     { _id: req.params.id, user: req.user },
@@ -46,14 +57,25 @@ router.put('/api/entries/:id', jwtMiddleware, async (req, res) => {
   );
   res.json({ entry });
 });
-router.put('/api/categories/:id', jwtMiddleware);
+router.put('/api/categories/:id', jwtMiddleware, async (req, res) => {
+  const category = await Category.findOneAndUpdate(
+    { _id: req.params.id, user: req.user },
+    { name: req.body.name, user: req.user },
+    { new: true }
+  );
+  res.json({ category });
+});
 router.put('/api/methods/:id', jwtMiddleware);
 
+// delete
 router.delete('/api/entries/:id', jwtMiddleware, async (req, res) => {
   await Entry.findOneAndDelete({ _id: req.params.id, user: req.user });
   res.sendStatus(200);
 });
-router.delete('/api/categories/:id', jwtMiddleware);
+router.delete('/api/categories/:id', jwtMiddleware, async (req, res) => {
+  await Category.findOneAndDelete({ _id: req.params.id, user: req.user });
+  res.sendStatus(200);
+});
 router.delete('/api/methods/:id', jwtMiddleware);
 
 module.exports = router;
