@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const mongoUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.smnfs.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
-mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+});
 
 const db = mongoose.connection;
 
