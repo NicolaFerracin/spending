@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const Entry = require('./models/Entry');
 const Category = require('./models/Category');
+const PaymentMethod = require('./models/PaymentMethod');
 
 const jwtMiddleware = passport.authenticate('jwt', { session: false });
 
@@ -29,7 +30,10 @@ router.get('/api/categories', jwtMiddleware, async (req, res) => {
   const categories = await Category.find({ user: req.user });
   res.json({ categories });
 });
-router.get('/api/methods', jwtMiddleware);
+router.get('/api/payment-methods', jwtMiddleware, async (req, res) => {
+  const paymentMethods = await PaymentMethod.find({ user: req.user });
+  res.json({ paymentMethods });
+});
 
 // get single
 router.get('/api/entries/:id', jwtMiddleware, async (req, res) => {
@@ -46,7 +50,10 @@ router.post('/api/categories', jwtMiddleware, async (req, res) => {
   const category = await Category.create({ name: req.body.name, user: req.user });
   res.json({ category });
 });
-router.post('/api/methods', jwtMiddleware);
+router.post('/api/payment-methods', jwtMiddleware, async (req, res) => {
+  const paymentMethod = await PaymentMethod.create({ name: req.body.name, user: req.user });
+  res.json({ paymentMethod });
+});
 
 // update
 router.put('/api/entries/:id', jwtMiddleware, async (req, res) => {
@@ -65,7 +72,14 @@ router.put('/api/categories/:id', jwtMiddleware, async (req, res) => {
   );
   res.json({ category });
 });
-router.put('/api/methods/:id', jwtMiddleware);
+router.put('/api/payment-methods/:id', jwtMiddleware, async (req, res) => {
+  const paymentMethod = await PaymentMethod.findOneAndUpdate(
+    { _id: req.params.id, user: req.user },
+    { name: req.body.name, user: req.user },
+    { new: true }
+  );
+  res.json({ paymentMethod });
+});
 
 // delete
 router.delete('/api/entries/:id', jwtMiddleware, async (req, res) => {
@@ -76,6 +90,9 @@ router.delete('/api/categories/:id', jwtMiddleware, async (req, res) => {
   await Category.findOneAndDelete({ _id: req.params.id, user: req.user });
   res.sendStatus(200);
 });
-router.delete('/api/methods/:id', jwtMiddleware);
+router.delete('/api/payment-methods/:id', jwtMiddleware, async (req, res) => {
+  await PaymentMethod.findOneAndDelete({ _id: req.params.id, user: req.user });
+  res.sendStatus(200);
+});
 
 module.exports = router;
