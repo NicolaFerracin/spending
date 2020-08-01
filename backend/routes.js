@@ -23,7 +23,9 @@ router.get('/profile', jwtMiddleware, (req, res) => {
 
 // get all
 router.get('/api/entries', jwtMiddleware, async (req, res) => {
-  const entries = await Entry.find({ user: req.user });
+  const entries = await Entry.find({ user: req.user })
+    .populate('paymentMethod')
+    .populate('category');
   res.json({ entries });
 });
 router.get('/api/categories', jwtMiddleware, async (req, res) => {
@@ -33,12 +35,6 @@ router.get('/api/categories', jwtMiddleware, async (req, res) => {
 router.get('/api/payment-methods', jwtMiddleware, async (req, res) => {
   const paymentMethods = await PaymentMethod.find({ user: req.user });
   res.json({ paymentMethods });
-});
-
-// get single
-router.get('/api/entries/:id', jwtMiddleware, async (req, res) => {
-  const entry = await Entry.findOne({ _id: req.params.id, user: req.user });
-  res.json({ entry });
 });
 
 // create

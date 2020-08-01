@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 const EntrySchema = new Schema({
   name: String,
-  method: String,
   amount: Number,
-  category: String,
+  paymentMethod: { type: Schema.Types.ObjectId, ref: 'PaymentMethod' },
+  category: { type: Schema.Types.ObjectId, ref: 'Category' },
   date: { type: Date, default: Date.now() },
   user: { type: Schema.Types.ObjectId, ref: 'User' }
 });
