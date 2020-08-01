@@ -5,3 +5,10 @@ export const formatDateForInput = (date = new Date()) => {
 
   return `${year}-${month}-${day}`;
 };
+
+const capitalizeWord = string => !!string && `${string[0].toUpperCase()}${string.substring(1)}`;
+export const capitalize = sentence =>
+  sentence
+    .split(' ')
+    .map(capitalizeWord)
+    .join(' ');
