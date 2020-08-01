@@ -29,6 +29,7 @@ class CategoryPaymentMethodForm extends Component {
 
   render() {
     const { isPosting, name, alert } = this.state;
+    // TODO receive page title
     const { page } = this.props;
 
     return (
@@ -52,6 +53,7 @@ class CategoryPaymentMethodForm extends Component {
               </div>
               <div className={styles.buttonWrapper}>
                 <button type="submit" disabled={isPosting}>
+                  {/* TODO receive page title */}
                   Add {page}
                 </button>
               </div>
