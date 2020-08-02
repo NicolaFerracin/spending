@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Button from '../../componets/Button';
 import SpendingContext from '../../componets/context';
 
 const Categories = () => {
@@ -28,7 +29,7 @@ const Categories = () => {
                 <Link href={`/categories/${c._id}`}>
                   <a>Edit Category</a>
                 </Link>
-                <button onClick={() => deleteCategory(ctx.cookie, c._id)}>Delete Category</button>
+                <Button onClick={() => deleteCategory(ctx.cookie, c._id)}>Delete Category</Button>
                 <hr />
               </div>
             );

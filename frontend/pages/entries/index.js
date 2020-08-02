@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Button from '../../componets/Button';
 import SpendingContext from '../../componets/context';
 
 const Entries = () => {
@@ -28,7 +29,7 @@ const Entries = () => {
                 <Link href={`/entries/${c._id}`}>
                   <a>Edit Entry</a>
                 </Link>
-                <button onClick={() => deleteEntry(ctx.cookie, c._id)}>Delete Entry</button>
+                <Button onClick={() => deleteEntry(ctx.cookie, c._id)}>Delete Entry</Button>
                 <hr />
               </div>
             );

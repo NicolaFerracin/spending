@@ -1,7 +1,8 @@
 import { Component } from 'react';
 import { formatDateForInput } from '../../utils';
-import styles from './styles.module.scss';
+import Button from '../Button';
 import SpendingContext from '../context';
+import styles from './styles.module.scss';
 
 export default class EntryForm extends Component {
   constructor(props) {
@@ -102,9 +103,10 @@ export default class EntryForm extends Component {
                 </label>
               </div>
               <div className={styles.buttonWrapper}>
-                <button type="submit" disabled={isPosting}>
+                {/* TODO: make button text dynamic */}
+                <Button type="submit" isDisabled={isPosting}>
                   Add Entry
-                </button>
+                </Button>
               </div>
             </form>
           </>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Button from '../../componets/Button';
 import SpendingContext from '../../componets/context';
 
 const PaymentMethods = () => {
@@ -28,9 +29,9 @@ const PaymentMethods = () => {
                 <Link href={`/payment-methods/${p._id}`}>
                   <a>Edit Payment Method</a>
                 </Link>
-                <button onClick={() => deletePaymentMethod(ctx.cookie, p._id)}>
+                <Button onClick={() => deletePaymentMethod(ctx.cookie, c._id)}>
                   Delete Payment Method
-                </button>
+                </Button>
                 <hr />
               </div>
             );

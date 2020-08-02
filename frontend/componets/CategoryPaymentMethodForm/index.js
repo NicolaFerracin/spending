@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { capitalize } from '../../utils';
 import SpendingContext from '../context';
+import Button from '../Button';
 import styles from './styles.module.scss';
 
 class CategoryPaymentMethodForm extends Component {
@@ -52,10 +53,10 @@ class CategoryPaymentMethodForm extends Component {
                 </label>
               </div>
               <div className={styles.buttonWrapper}>
-                <button type="submit" disabled={isPosting}>
-                  {/* TODO receive page title */}
+                {/* TODO receive page title */}
+                <Button type="submit" isDisabled={isPosting}>
                   Add {page}
-                </button>
+                </Button>
               </div>
             </form>
           </>
