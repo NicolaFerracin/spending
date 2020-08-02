@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import CategoryPaymentMethodForm from '../../componets/CategoryPaymentMethodForm';
 import SpendingContext from '../../componets/context';
+import { ProtectedRoute } from '../../authContext';
 
 const EditPaymentMethod = () => {
   const router = useRouter();
@@ -37,4 +38,4 @@ const EditPaymentMethod = () => {
   );
 };
 
-export default EditPaymentMethod;
+export default ProtectedRoute(EditPaymentMethod);

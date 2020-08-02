@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Button from '../../componets/Button';
 import SpendingContext from '../../componets/context';
+import { ProtectedRoute } from '../../authContext';
 
 const Categories = () => {
   const deleteCategory = async (cookie, id) => {
@@ -46,4 +47,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default ProtectedRoute(Categories);

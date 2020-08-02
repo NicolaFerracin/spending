@@ -1,4 +1,5 @@
 import CategoryPaymentMethodForm from '../../componets/CategoryPaymentMethodForm';
+import { ProtectedRoute } from '../../authContext';
 
 const NewPaymentMethod = () => {
   const handleSubmit = async (cookie, name) => {
@@ -18,4 +19,4 @@ const NewPaymentMethod = () => {
   return <CategoryPaymentMethodForm page="payment method" handleSubmit={handleSubmit} />;
 };
 
-export default NewPaymentMethod;
+export default ProtectedRoute(NewPaymentMethod);

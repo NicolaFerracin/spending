@@ -1,4 +1,5 @@
 import EntryForm from '../../componets/EntryForm';
+import { ProtectedRoute } from '../../authContext';
 
 const NewEntry = () => {
   const handleSubmit = async (cookie, newEntry) => {
@@ -23,4 +24,4 @@ const NewEntry = () => {
   );
 };
 
-export default NewEntry;
+export default ProtectedRoute(NewEntry);

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Button from '../../componets/Button';
 import SpendingContext from '../../componets/context';
+import { ProtectedRoute } from '../../authContext';
 
 const Entries = () => {
   const deleteEntry = async (cookie, id) => {
@@ -50,4 +51,4 @@ const Entries = () => {
   );
 };
 
-export default Entries;
+export default ProtectedRoute(Entries);

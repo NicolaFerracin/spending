@@ -1,23 +1,15 @@
 import { useRouter } from 'next/router';
 import CategoryPaymentMethodForm from '../../componets/CategoryPaymentMethodForm';
 import SpendingContext from '../../componets/context';
+import { ProtectedRoute } from '../../authContext';
 
 const EditCategory = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const handleSubmit = async (cookie, newName) => {
-    // TODO abstract all this config away
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${id}`, {
-      method: 'PUT',
-      credentials: 'include',
-      headers: {
-        cookie,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name: newName })
-    });
+  const handleSubmit = async (ctx, newName) => {
+    console.log(ctx.apiHandler);
+    const res = await ctx.apiHandler.put(`api/categories/${id}`, { name: newName });
     return { status: res.status };
   };
 
@@ -28,7 +20,7 @@ const EditCategory = () => {
           <h1>Edit Category</h1>
           <CategoryPaymentMethodForm
             page="category"
-            handleSubmit={handleSubmit}
+            handleSubmit={newName => handleSubmit(ctx, newName)}
             name={ctx.categories.find(c => c._id === id).name}
           />
         </>
@@ -37,4 +29,4 @@ const EditCategory = () => {
   );
 };
 
-export default EditCategory;
+export default ProtectedRoute(EditCategory);

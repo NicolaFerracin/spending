@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import EntryForm from '../../componets/EntryForm';
 import SpendingContext from '../../componets/context';
+import { ProtectedRoute } from '../../authContext';
 
 const Editentry = () => {
   const router = useRouter();
@@ -33,4 +34,4 @@ const Editentry = () => {
   );
 };
 
-export default Editentry;
+export default ProtectedRoute(Editentry);
