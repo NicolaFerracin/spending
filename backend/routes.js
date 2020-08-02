@@ -24,16 +24,17 @@ router.get('/profile', jwtMiddleware, (req, res) => {
 // get all
 router.get('/api/entries', jwtMiddleware, async (req, res) => {
   const entries = await Entry.find({ user: req.user })
+    .sort({ date: 'desc' })
     .populate('paymentMethod')
     .populate('category');
   res.json({ entries });
 });
 router.get('/api/categories', jwtMiddleware, async (req, res) => {
-  const categories = await Category.find({ user: req.user });
+  const categories = await Category.find({ user: req.user }).sort({ name: 'asc' });
   res.json({ categories });
 });
 router.get('/api/payment-methods', jwtMiddleware, async (req, res) => {
-  const paymentMethods = await PaymentMethod.find({ user: req.user });
+  const paymentMethods = await PaymentMethod.find({ user: req.user }).sort({ name: 'asc' });
   res.json({ paymentMethods });
 });
 
