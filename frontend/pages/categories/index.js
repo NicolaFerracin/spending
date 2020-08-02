@@ -4,17 +4,20 @@ import SpendingContext from '../../componets/context';
 
 const Categories = () => {
   const deleteCategory = async (cookie, id) => {
-    // TODO abstract all this away
-    await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${id}`, {
-      method: 'DELETE',
-      credentials: 'include',
-      headers: {
-        cookie,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
-    location.reload();
+    const shouldDelete = window.confirm('Are you sure you want to delete this?');
+    if (shouldDelete) {
+      // TODO abstract all this away
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          cookie,
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      });
+      location.reload();
+    }
   };
 
   return (

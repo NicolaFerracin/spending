@@ -7,15 +7,14 @@ import styles from './styles.module.scss';
 export default class EntryForm extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       ...props,
       id: props.id,
       name: props.name || '',
       amount: props.amount || '',
-      paymentMethod: props.paymentMethod._id || '',
-      category: props.category._id || '',
-      date: formatDateForInput(new Date(props.date))
+      paymentMethod: props.paymentMethod?._id || '',
+      category: props.category?._id || '',
+      date: formatDateForInput(props.date ? new Date(props.date) : new Date())
     };
   }
 
@@ -27,7 +26,7 @@ export default class EntryForm extends Component {
     const { status } = await this.props.handleSubmit(cookie, this.state);
 
     if (status === 200) {
-      window.location = '/';
+      window.location = '/entries';
     } else {
       this.setState({ alert: 'Something went wrong, please retry.', isPosting: false });
     }
