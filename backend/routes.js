@@ -27,6 +27,10 @@ router.get('/api/entries', jwtMiddleware, async (req, res) => {
     .sort({ date: 'desc' })
     .populate('paymentMethod')
     .populate('category');
+  entries.forEach(
+    entry =>
+      (entry.date = new Date(entry.date).toLocaleString('en-US', { timeZone: 'Europe/Rome' }))
+  );
   res.json({ entries });
 });
 router.get('/api/categories', jwtMiddleware, async (req, res) => {
