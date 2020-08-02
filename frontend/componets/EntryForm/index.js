@@ -6,14 +6,15 @@ import SpendingContext from '../context';
 export default class EntryForm extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = {
       ...props,
       id: props.id,
       name: props.name || '',
       amount: props.amount || '',
-      paymentMethod: props.paymentMethod || '',
-      category: props.category || '',
-      date: props.date || formatDateForInput()
+      paymentMethod: props.paymentMethod._id || '',
+      category: props.category._id || '',
+      date: formatDateForInput(new Date(props.date))
     };
   }
 
@@ -38,7 +39,6 @@ export default class EntryForm extends Component {
       <SpendingContext.Consumer>
         {({ paymentMethods, categories, cookie }) => (
           <>
-            <h1>New Entry</h1>
             {alert && <h2>{alert}</h2>}
             <form onSubmit={e => this.handleSubmit(e, cookie)} disabled className={styles.form}>
               <div className={styles.formControl}>

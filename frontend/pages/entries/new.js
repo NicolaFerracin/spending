@@ -1,6 +1,6 @@
 import EntryForm from '../../componets/EntryForm';
 
-export default () => {
+const NewEntry = () => {
   const handleSubmit = async (cookie, newEntry) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/entries`, {
       method: 'POST',
@@ -15,5 +15,12 @@ export default () => {
     return { status: res.status };
   };
 
-  return <EntryForm handleSubmit={handleSubmit} />;
+  return (
+    <>
+      <h1>New Entry</h1>
+      <EntryForm handleSubmit={handleSubmit} />
+    </>
+  );
 };
+
+export default NewEntry;
