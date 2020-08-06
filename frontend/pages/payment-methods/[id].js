@@ -1,41 +1,37 @@
-import { useRouter } from 'next/router';
 import CategoryPaymentMethodForm from '../../componets/CategoryPaymentMethodForm';
-import SpendingContext from '../../componets/context';
-import { ProtectedRoute } from '../../authContext';
+import api from '../../api';
 
-const EditPaymentMethod = () => {
-  const router = useRouter();
-  const { id } = router.query;
-
-  const handleSubmit = async (cookie, newName) => {
-    // TODO abstract all this config away
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payment-methods/${id}`, {
-      method: 'PUT',
-      credentials: 'include',
-      headers: {
-        cookie,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name: newName })
-    });
+const EditPaymentMethod = ({ id, paymentMethod }) => {
+  const handleSubmit = async newName => {
+    const res = await api.put(`api/payment-methods/${id}`, { name: newName });
     return { status: res.status };
   };
 
   return (
-    <SpendingContext.Consumer>
-      {ctx => (
-        <>
-          <h1>Edit Payment Method</h1>
-          <CategoryPaymentMethodForm
-            page="payment method"
-            handleSubmit={handleSubmit}
-            name={ctx.paymentMethods.find(c => c._id === id).name}
-          />
-        </>
-      )}
-    </SpendingContext.Consumer>
+    <>
+      <h1>Edit Payment Method</h1>
+      <CategoryPaymentMethodForm
+        page="payment method"
+        handleSubmit={handleSubmit}
+        name={paymentMethod.name}
+      />
+    </>
   );
 };
 
-export default ProtectedRoute(EditPaymentMethod);
+export default EditPaymentMethod;
+
+export async function getServerSideProps({ query, req }) {
+  const cookie = req?.headers?.cookie;
+  let paymentMethod = {};
+  if (cookie) {
+    const res = await api.get(`api/payment-methods/${query.id}`, {
+      headers: { cookie }
+    });
+    paymentMethod = res.data.paymentMethod;
+  }
+
+  return {
+    props: { paymentMethod, id: query.id }
+  };
+}

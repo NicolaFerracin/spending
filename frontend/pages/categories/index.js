@@ -1,50 +1,56 @@
 import Link from 'next/link';
 import Button from '../../componets/Button';
-import SpendingContext from '../../componets/context';
-import { ProtectedRoute } from '../../authContext';
+import Layout from '../../componets/Layout';
+import api from '../../api';
 
-const Categories = () => {
-  const deleteCategory = async (cookie, id) => {
+class Categories extends React.Component {
+  deleteCategory = async id => {
     const shouldDelete = window.confirm('Are you sure you want to delete this?');
     if (shouldDelete) {
-      // TODO abstract all this away
-      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          cookie,
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      });
+      api.delete(`api/categories/${id}`);
       location.reload();
     }
   };
 
-  return (
-    <SpendingContext.Consumer>
-      {ctx => (
-        <>
-          <h1>Categories</h1>
-          {ctx.categories.map(c => {
-            return (
-              <div key={c._id}>
-                Name: {c.name}
-                <Link href={`/categories/${c._id}`}>
-                  <a>Edit Category</a>
-                </Link>
-                <Button onClick={() => deleteCategory(ctx.cookie, c._id)}>Delete Category</Button>
-                <hr />
-              </div>
-            );
-          })}
-          <Link href="/categories/new">
-            <a>Add New Category</a>
-          </Link>
-        </>
-      )}
-    </SpendingContext.Consumer>
-  );
-};
+  render() {
+    return (
+      <>
+        <h1>Categories</h1>
+        {this.props?.categories?.map(c => {
+          return (
+            <div key={c._id}>
+              Name: {c.name}
+              <Link href={`/categories/${c._id}`}>
+                <a>Edit Category</a>
+              </Link>
+              <Button onClick={() => this.deleteCategory(c._id)}>Delete Category</Button>
+              <hr />
+            </div>
+          );
+        })}
+        <Link href="/categories/new">
+          <a>Add New Category</a>
+        </Link>
+      </>
+    );
+  }
+}
 
-export default ProtectedRoute(Categories);
+Categories.Layout = Layout;
+
+export default Categories;
+
+export async function getServerSideProps(ctx) {
+  const cookie = ctx.req?.headers?.cookie;
+  let categories = [];
+  if (cookie) {
+    const res = await api.get('api/categories', {
+      headers: { cookie }
+    });
+    categories = res.data.categories;
+  }
+
+  return {
+    props: { categories }
+  };
+}

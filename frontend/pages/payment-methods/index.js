@@ -1,52 +1,49 @@
 import Link from 'next/link';
 import Button from '../../componets/Button';
-import SpendingContext from '../../componets/context';
-import { ProtectedRoute } from '../../authContext';
+import api from '../../api';
 
-const PaymentMethods = () => {
-  const deletePaymentMethod = async (cookie, id) => {
+const PaymentMethods = ({ paymentMethods }) => {
+  const deletePaymentMethod = async id => {
     const shouldDelete = window.confirm('Are you sure you want to delete this?');
     if (shouldDelete) {
-      // TODO abstract all this away
-      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payment-methods/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: {
-          cookie,
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      });
+      await api.delete(`api/payment-methods/${id}`);
       location.reload();
     }
   };
 
   return (
-    <SpendingContext.Consumer>
-      {ctx => (
-        <>
-          <h1>Payment Methods</h1>
-          {ctx.paymentMethods.map(p => {
-            return (
-              <div key={p._id}>
-                Name: {p.name}
-                <Link href={`/payment-methods/${p._id}`}>
-                  <a>Edit Payment Method</a>
-                </Link>
-                <Button onClick={() => deletePaymentMethod(ctx.cookie, c._id)}>
-                  Delete Payment Method
-                </Button>
-                <hr />
-              </div>
-            );
-          })}
-          <Link href="/payment-methods/new">
-            <a>Add Payment Method</a>
+    <>
+      <h1>Payment Methods</h1>
+      {paymentMethods.map(p => (
+        <div key={p._id}>
+          Name: {p.name}
+          <Link href={`/payment-methods/${p._id}`}>
+            <a>Edit Payment Method</a>
           </Link>
-        </>
-      )}
-    </SpendingContext.Consumer>
+          <Button onClick={() => deletePaymentMethod(p._id)}>Delete Payment Method</Button>
+          <hr />
+        </div>
+      ))}
+      <Link href="/payment-methods/new">
+        <a>Add Payment Method</a>
+      </Link>
+    </>
   );
 };
 
-export default ProtectedRoute(PaymentMethods);
+export default PaymentMethods;
+
+export async function getServerSideProps(ctx) {
+  const cookie = ctx.req?.headers?.cookie;
+  let paymentMethods = [];
+  if (cookie) {
+    const res = await api.get('api/payment-methods', {
+      headers: { cookie }
+    });
+    paymentMethods = res.data.paymentMethods;
+  }
+
+  return {
+    props: { paymentMethods }
+  };
+}

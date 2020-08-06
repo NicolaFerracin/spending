@@ -1,22 +1,19 @@
 import CategoryPaymentMethodForm from '../../componets/CategoryPaymentMethodForm';
-import { ProtectedRoute } from '../../authContext';
+import api from '../../api';
 
 const NewCategory = () => {
-  const handleSubmit = async (cookie, name) => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        cookie,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name })
+  const handleSubmit = async name => {
+    const res = await api.post(`api/categories`, {
+      name
     });
     return { status: res.status };
   };
 
-  return <CategoryPaymentMethodForm page="category" handleSubmit={handleSubmit} />;
+  return (
+    <>
+      <CategoryPaymentMethodForm page="category" handleSubmit={handleSubmit} />
+    </>
+  );
 };
 
-export default ProtectedRoute(NewCategory);
+export default NewCategory;
