@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { withRouter } from 'next/router';
 import Cookies from 'js-cookie';
+import Layout from './componets/Layout';
 import api from './api';
 
 const AuthContext = createContext({});
@@ -26,9 +27,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const logout = () => {
+    window.location.pathname = '/login';
     Cookies.remove('jwt');
     setUser(null);
-    window.location.pathname = '/login';
   };
 
   return (
@@ -42,11 +43,12 @@ class UnwrappedProtectedRoute extends React.Component {
   render() {
     return (
       <AuthContext.Consumer>
-        {({ isAuthenticated, loading }) => {
+        {({ isAuthenticated, loading, user }) => {
           if (!isAuthenticated && !loading) {
             this.props.router.push('/login');
           }
-          return this.props.children;
+
+          return loading ? null : <Layout>{this.props.children}</Layout>;
         }}
       </AuthContext.Consumer>
     );
