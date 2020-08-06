@@ -42,6 +42,22 @@ router.get('/api/payment-methods', jwtMiddleware, async (req, res) => {
   res.json({ paymentMethods });
 });
 
+// get single
+router.get('/api/entries/:id', jwtMiddleware, async (req, res) => {
+  const [entry] = await Entry.find({ _id: req.params.id, user: req.user })
+    .populate('paymentMethod')
+    .populate('category');
+  res.json({ entry });
+});
+router.get('/api/categories/:id', jwtMiddleware, async (req, res) => {
+  const [category] = await Category.find({ _id: req.params.id, user: req.user });
+  res.json({ category });
+});
+router.get('/api/payment-methods/:id', jwtMiddleware, async (req, res) => {
+  const [paymentMethod] = await PaymentMethod.find({ _id: req.params.id, user: req.user });
+  res.json({ paymentMethod });
+});
+
 // create
 router.post('/api/entries', jwtMiddleware, async (req, res) => {
   const entry = await Entry.create({ ...req.body, user: req.user });
@@ -66,6 +82,7 @@ router.put('/api/entries/:id', jwtMiddleware, async (req, res) => {
   res.json({ entry });
 });
 router.put('/api/categories/:id', jwtMiddleware, async (req, res) => {
+  console.log(req);
   const category = await Category.findOneAndUpdate(
     { _id: req.params.id, user: req.user },
     { name: req.body.name, user: req.user },
