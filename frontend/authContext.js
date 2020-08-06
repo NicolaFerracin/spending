@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { withRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import api from './api';
 
@@ -38,20 +38,21 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export function ProtectedRoute(Component) {
-  return () => {
-    const { isAuthenticated, loading } = useAuth();
-    const router = useRouter();
-
-    useEffect(() => {
-      if (!isAuthenticated && !loading) {
-        router.push('/login');
-      }
-    }, [loading, isAuthenticated]);
-
-    return <Component {...arguments} />;
-  };
+class UnwrappedProtectedRoute extends React.Component {
+  render() {
+    return (
+      <AuthContext.Consumer>
+        {({ isAuthenticated, loading }) => {
+          if (!isAuthenticated && !loading) {
+            this.props.router.push('/login');
+          }
+          return this.props.children;
+        }}
+      </AuthContext.Consumer>
+    );
+  }
 }
+export const ProtectedRoute = withRouter(UnwrappedProtectedRoute);
 
 export default function useAuth() {
   return useContext(AuthContext);
