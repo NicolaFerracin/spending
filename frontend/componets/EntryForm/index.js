@@ -1,7 +1,6 @@
 import { Component } from 'react';
 import { formatDateForInput } from '../../utils';
 import Button from '../Button';
-import SpendingContext from '../context';
 import styles from './styles.module.scss';
 
 export default class EntryForm extends Component {
