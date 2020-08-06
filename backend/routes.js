@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Entry = require('./models/Entry');
 const Category = require('./models/Category');
 const PaymentMethod = require('./models/PaymentMethod');
@@ -82,7 +83,6 @@ router.put('/api/entries/:id', jwtMiddleware, async (req, res) => {
   res.json({ entry });
 });
 router.put('/api/categories/:id', jwtMiddleware, async (req, res) => {
-  console.log(req);
   const category = await Category.findOneAndUpdate(
     { _id: req.params.id, user: req.user },
     { name: req.body.name, user: req.user },
@@ -111,6 +111,35 @@ router.delete('/api/categories/:id', jwtMiddleware, async (req, res) => {
 router.delete('/api/payment-methods/:id', jwtMiddleware, async (req, res) => {
   await PaymentMethod.findOneAndDelete({ _id: req.params.id, user: req.user });
   res.sendStatus(200);
+});
+
+router.get('/api/menu', jwtMiddleware, async (req, res) => {
+  const menu = await Entry.aggregate([
+    // { $match: { user: mongoose.Types.ObjectId(req.user._id) } },
+    { $group: { _id: '$date' } },
+    {
+      $project: {
+        year: { $dateToString: { format: '%Y', date: '$_id' } },
+        month: { $dateToString: { format: '%m', date: '$_id' } }
+      }
+    },
+    {
+      $group: {
+        _id: { year: '$year', month: '$month' }
+      }
+    },
+    {
+      $group: {
+        _id: '$_id.year',
+        months: {
+          $push: {
+            month: '$_id.month'
+          }
+        }
+      }
+    }
+  ]).sort({ _id: 'desc' });
+  res.json({ menu });
 });
 
 module.exports = router;
