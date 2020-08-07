@@ -1,15 +1,22 @@
-import { Component } from 'react';
-import { AuthProvider } from '../authContext';
+import { useRouter } from 'next/router';
+import Layout from '../componets/Layout';
+import { AuthProvider, ProtectedRoute } from '../authContext';
 import '../styles/globals.css';
 
-export default class MyApp extends Component {
-  render() {
-    const { Component, pageProps } = this.props;
+export default function MyApp({ Component, pageProps }) {
+  const { pathname } = useRouter();
 
-    return (
-      <AuthProvider>
+  return (
+    <AuthProvider>
+      {pathname !== '/login' ? (
+        <ProtectedRoute>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ProtectedRoute>
+      ) : (
         <Component {...pageProps} />
-      </AuthProvider>
-    );
-  }
+      )}
+    </AuthProvider>
+  );
 }
