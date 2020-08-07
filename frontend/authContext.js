@@ -46,6 +46,7 @@ class UnwrappedProtectedRoute extends React.Component {
         {({ isAuthenticated, loading, user }) => {
           if (!isAuthenticated && !loading) {
             this.props.router.push('/login');
+            return null;
           }
 
           return loading ? null : <Layout>{this.props.children}</Layout>;
