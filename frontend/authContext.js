@@ -49,7 +49,7 @@ class UnwrappedProtectedRoute extends React.Component {
             return null;
           }
 
-          return loading ? null : <Layout>{this.props.children}</Layout>;
+          return loading ? null : this.props.children;
         }}
       </AuthContext.Consumer>
     );
