@@ -1,0 +1,21 @@
+.table {
+  width: 100%;
+
+  .thead th {
+    font-size: 0.875rem;
+  }
+
+  .tbody th {
+    font-weight: 400;
+  }
+
+  th {
+    text-align: left;
+    border-bottom: 1px solid rgba(224, 224, 224, 1);
+    padding: 10px 24px 10px 16px;
+
+    &:last-of-type {
+      text-align: right;
+    }
+  }
+}
