@@ -1,5 +1,6 @@
 import Link from 'next/Link';
 import EntriesList from '../../componets/EntriesList';
+import AddButton from '../../componets/AddButton';
 import { MONTHS } from '../../utils';
 import api from '../../api';
 
@@ -11,7 +12,9 @@ const Editentry = ({ year, month, entries }) => {
       </h1>
       <EntriesList entries={entries} />
       <Link href="/entries/new">
-        <a>Add New Entry</a>
+        <a>
+          <AddButton to="/payment-methods/new" />
+        </a>
       </Link>
     </>
   );

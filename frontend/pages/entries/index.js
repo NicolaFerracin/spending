@@ -1,5 +1,6 @@
 import Link from 'next/Link';
 import EntriesList from '../../componets/EntriesList';
+import AddButton from '../../componets/AddButton';
 import api from '../../api';
 
 const Entries = ({ entries }) => {
@@ -8,7 +9,9 @@ const Entries = ({ entries }) => {
       <h1>Entries</h1>
       <EntriesList entries={entries} />
       <Link href="/entries/new">
-        <a>Add New Entry</a>
+        <a>
+          <AddButton to="/payment-methods/new" />
+        </a>
       </Link>
     </>
   );

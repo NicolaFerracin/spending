@@ -1,5 +1,6 @@
 import Link from 'next/Link';
 import Button from '../../componets/Button';
+import AddButton from '../../componets/AddButton';
 import Layout from '../../componets/Layout';
 import api from '../../api';
 
@@ -29,7 +30,9 @@ class Categories extends React.Component {
           );
         })}
         <Link href="/categories/new">
-          <a>Add New Category</a>
+          <a>
+            <AddButton to="/payment-methods/new" />
+          </a>
         </Link>
       </>
     );

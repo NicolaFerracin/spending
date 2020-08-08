@@ -1,5 +1,6 @@
 import Link from 'next/Link';
 import Button from '../../componets/Button';
+import AddButton from '../../componets/AddButton';
 import api from '../../api';
 
 const PaymentMethods = ({ paymentMethods }) => {
@@ -25,7 +26,9 @@ const PaymentMethods = ({ paymentMethods }) => {
         </div>
       ))}
       <Link href="/payment-methods/new">
-        <a>Add Payment Method</a>
+        <a>
+          <AddButton to="/payment-methods/new" />
+        </a>
       </Link>
     </>
   );
