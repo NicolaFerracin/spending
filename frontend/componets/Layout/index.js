@@ -2,9 +2,11 @@ import React from 'react';
 import Menu from '../Menu';
 import styles from './styles.module.scss';
 
-export default props => (
-  <div className={styles.layout}>
-    <Menu />
-    {props.children}
-  </div>
-);
+export default function Layout(props) {
+  return (
+    <div className={styles.layout}>
+      <Menu />
+      <div className={styles.content}>{props.children}</div>
+    </div>
+  );
+}

@@ -1,52 +1,87 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/Link';
+import { useRouter } from 'next/Router';
 import styles from './styles.module.scss';
 import useAuth from '../../authContext';
 import api from '../../api';
+import { MONTHS } from '../../utils';
 
 const Menu = () => {
-  const { pathname } = { pathname: 'hey' };
+  const router = useRouter();
+  const { asPath } = router;
   const { user, logout } = useAuth();
-  const [menu, setData] = useState([]);
+  const [menu, setMenu] = useState([]);
+  const [dropdowns, setDropdowns] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await api.get('api/menu');
-      setData(res.data.menu);
+      setMenu(res.data.menu);
     };
 
     fetchData();
   }, []);
+
+  const toggleDropdown = year => {
+    if (dropdowns.includes(year)) {
+      setDropdowns(dropdowns.filter(d => d !== year));
+    } else {
+      setDropdowns([...dropdowns, year]);
+    }
+  };
 
   return (
     <div className={styles.sidebar}>
       <h2>{user.name}'s Spending</h2>
       <nav className={styles.nav}>
         <ul>
-          <li className={`${styles.li} ${pathname === '/all' ? styles.active : ''}`}>
+          <li className={`${styles.li} ${asPath === '/' ? styles.active : ''}`}>
             <Link href="/">
               <a>Home</a>
+            </Link>
+          </li>
+          <li className={`${styles.li} ${asPath === '/entries' ? styles.active : ''}`}>
+            <Link href="/entries">
+              <a>Entries</a>
+            </Link>
+          </li>
+          <li className={`${styles.li} ${asPath === '/categories' ? styles.active : ''}`}>
+            <Link href="/categories">
+              <a>Categories</a>
+            </Link>
+          </li>
+          <li className={`${styles.li} ${asPath === '/payment-methods' ? styles.active : ''}`}>
+            <Link href="/payment-methods">
+              <a>Payment Methods</a>
             </Link>
           </li>
           {menu.map(({ _id: year, months }) => (
             <li
               key={year}
-              className={`${styles.li} ${pathname === `/${year}` ? styles.active : ''}`}
+              className={`${styles.li} ${
+                asPath.startsWith(`/entries/${year}`) ? styles.active : ''
+              }`}
+              onClick={() => toggleDropdown(Number(year))}
             >
-              <Link href={`/${year}`}>
+              <Link href="#">
                 <a>{year}</a>
               </Link>
               <ul>
-                {months.map(({ month }) => (
-                  <li
-                    key={month}
-                    className={`${styles.li} ${pathname === `/${month}` ? styles.active : ''}`}
-                  >
-                    <Link href={`/${month}`}>
-                      <a>{month}</a>
-                    </Link>
-                  </li>
-                ))}
+                {!dropdowns.includes(Number(year)) &&
+                  months
+                    .sort((a, b) => b.month - a.month)
+                    .map(({ month }) => (
+                      <li
+                        key={month}
+                        className={`${styles.li} ${
+                          asPath === `/entries/${year}/${month}` ? styles.active : ''
+                        }`}
+                      >
+                        <Link href="/entries/[...params]" as={`/entries/${year}/${month}`}>
+                          <a>{MONTHS[Number(month) - 1].substr(0, 3)}</a>
+                        </Link>
+                      </li>
+                    ))}
               </ul>
             </li>
           ))}

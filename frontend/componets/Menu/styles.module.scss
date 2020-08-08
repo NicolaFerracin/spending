@@ -28,10 +28,20 @@
   font-family: sans-serif;
   font-size: 30px;
   text-decoration: none;
+  padding: 10px 0px;
+
+  &:not(:last-of-type) {
+    border-bottom: 1px solid;
+  }
 
   &.active {
     font-weight: bold;
     color: #e53935;
+    
+    li:not(.active) {
+      font-weight: initial;
+      color: initial;
+    }
   }
 
   a {
