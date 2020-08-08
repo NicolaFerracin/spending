@@ -1,7 +1,13 @@
 import Link from 'next/Link';
-import Button from '../../componets/Button';
+import Table from '../../componets/Table';
+import Svg from '../../componets/Svg';
 import AddButton from '../../componets/AddButton';
 import api from '../../api';
+
+const COLS = [
+  { id: 'name', header: 'Name', order: 1 },
+  { id: 'actions', header: 'Actions', order: 2 }
+];
 
 const PaymentMethods = ({ paymentMethods }) => {
   const deletePaymentMethod = async id => {
@@ -15,19 +21,26 @@ const PaymentMethods = ({ paymentMethods }) => {
   return (
     <>
       <h1>Payment Methods</h1>
-      {paymentMethods.map(p => (
-        <div key={p._id}>
-          Name: {p.name}
-          <Link href={`/payment-methods/${p._id}`}>
-            <a>Edit Payment Method</a>
-          </Link>
-          <Button onClick={() => deletePaymentMethod(p._id)}>Delete Payment Method</Button>
-          <hr />
-        </div>
-      ))}
+      <Table
+        cols={COLS}
+        data={paymentMethods.map(p => ({
+          id: p._id,
+          name: p.name,
+          actions: (
+            <>
+              <Link href="/payment-methods/[id]" as={`/payment-methods/${p._id}`}>
+                <a>
+                  <Svg.Edit />
+                </a>
+              </Link>
+              <Svg.Delete onClick={() => deletePaymentMethod(p._id)} />
+            </>
+          )
+        }))}
+      />
       <Link href="/payment-methods/new">
         <a>
-          <AddButton to="/payment-methods/new" />
+          <AddButton />
         </a>
       </Link>
     </>
