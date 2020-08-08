@@ -1,4 +1,4 @@
-import Link from 'next/Link';
+import Link from 'next/link';
 import EntriesList from '../../componets/EntriesList';
 import AddButton from '../../componets/AddButton';
 import api from '../../api';

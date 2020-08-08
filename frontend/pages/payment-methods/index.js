@@ -1,4 +1,4 @@
-import Link from 'next/Link';
+import Link from 'next/link';
 import Table from '../../componets/Table';
 import Svg from '../../componets/Svg';
 import AddButton from '../../componets/AddButton';

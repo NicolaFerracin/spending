@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { withRouter } from 'next/Router';
+import { withRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import Layout from './componets/Layout';
 import api from './api';

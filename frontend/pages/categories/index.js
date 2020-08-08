@@ -1,4 +1,4 @@
-import Link from 'next/Link';
+import Link from 'next/link';
 import AddButton from '../../componets/AddButton';
 import Table from '../../componets/Table';
 import Layout from '../../componets/Layout';

@@ -1,4 +1,4 @@
-import Link from 'next/Link';
+import Link from 'next/link';
 import Svg from '../../componets/Svg';
 import Table from '../../componets/Table';
 import api from '../../api';
