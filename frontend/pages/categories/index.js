@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from 'next/Link';
 import Button from '../../componets/Button';
 import Layout from '../../componets/Layout';
 import api from '../../api';
