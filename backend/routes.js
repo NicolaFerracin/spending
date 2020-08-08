@@ -28,10 +28,6 @@ router.get('/api/entries', jwtMiddleware, async (req, res) => {
     .sort({ date: 'desc' })
     .populate('paymentMethod')
     .populate('category');
-  entries.forEach(
-    entry =>
-      (entry.date = new Date(entry.date).toLocaleString('en-US', { timeZone: 'Europe/Rome' }))
-  );
   res.json({ entries });
 });
 router.get('/api/categories', jwtMiddleware, async (req, res) => {
@@ -61,7 +57,14 @@ router.get('/api/payment-methods/:id', jwtMiddleware, async (req, res) => {
 
 // create
 router.post('/api/entries', jwtMiddleware, async (req, res) => {
-  const entry = await Entry.create({ ...req.body, user: req.user });
+  const [year, month, day] = req.body.date.split('-');
+  const newEntry = {
+    ...req.body,
+    year,
+    month,
+    day
+  };
+  const entry = await Entry.create({ ...newEntry, user: req.user });
   res.json({ entry });
 });
 router.post('/api/categories', jwtMiddleware, async (req, res) => {
@@ -75,9 +78,16 @@ router.post('/api/payment-methods', jwtMiddleware, async (req, res) => {
 
 // update
 router.put('/api/entries/:id', jwtMiddleware, async (req, res) => {
+  const [year, month, day] = req.body.date.split('-');
+  const updatedEntry = {
+    ...req.body,
+    year,
+    month,
+    day
+  };
   const entry = await Entry.findOneAndUpdate(
     { _id: req.params.id, user: req.user },
-    { ...req.body, user: req.user },
+    { ...updatedEntry, user: req.user },
     { new: true }
   );
   res.json({ entry });
@@ -115,7 +125,7 @@ router.delete('/api/payment-methods/:id', jwtMiddleware, async (req, res) => {
 
 router.get('/api/menu', jwtMiddleware, async (req, res) => {
   const menu = await Entry.aggregate([
-    // { $match: { user: mongoose.Types.ObjectId(req.user._id) } },
+    { $match: { user: mongoose.Types.ObjectId(req.user._id) } },
     { $group: { _id: '$date' } },
     {
       $project: {
