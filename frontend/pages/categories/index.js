@@ -1,8 +1,14 @@
 import Link from 'next/Link';
-import Button from '../../componets/Button';
 import AddButton from '../../componets/AddButton';
+import Table from '../../componets/Table';
 import Layout from '../../componets/Layout';
+import Svg from '../../componets/Svg';
 import api from '../../api';
+
+const COLS = [
+  { id: 'name', header: 'Name', order: 1 },
+  { id: 'actions', header: 'Actions', order: 2 }
+];
 
 class Categories extends React.Component {
   deleteCategory = async id => {
@@ -17,21 +23,26 @@ class Categories extends React.Component {
     return (
       <>
         <h1>Categories</h1>
-        {this.props?.categories?.map(c => {
-          return (
-            <div key={c._id}>
-              Name: {c.name}
-              <Link href={`/categories/${c._id}`}>
-                <a>Edit Category</a>
-              </Link>
-              <Button onClick={() => this.deleteCategory(c._id)}>Delete Category</Button>
-              <hr />
-            </div>
-          );
-        })}
+        <Table
+          cols={COLS}
+          data={this.props?.categories?.map(c => ({
+            id: c._id,
+            name: c.name,
+            actions: (
+              <>
+                <Link href="/categories/[id]" as={`/categories/${c._id}`}>
+                  <a>
+                    <Svg.Edit />
+                  </a>
+                </Link>
+                <Svg.Delete onClick={() => this.deleteCategory(c._id)} />
+              </>
+            )
+          }))}
+        />
         <Link href="/categories/new">
           <a>
-            <AddButton to="/payment-methods/new" />
+            <AddButton />
           </a>
         </Link>
       </>
