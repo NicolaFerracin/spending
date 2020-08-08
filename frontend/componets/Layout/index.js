@@ -6,7 +6,9 @@ export default function Layout(props) {
   return (
     <div className={styles.layout}>
       <Menu />
-      <div className={styles.content}>{props.children}</div>
+      <div className={styles.content}>
+        <div className={styles.box}>{props.children}</div>
+      </div>
     </div>
   );
 }
