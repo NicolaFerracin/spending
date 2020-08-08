@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/Router';
 import Layout from '../componets/Layout';
 import { AuthProvider, ProtectedRoute } from '../authContext';
 import '../styles/globals.css';
