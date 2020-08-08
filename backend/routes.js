@@ -39,6 +39,20 @@ router.get('/api/payment-methods', jwtMiddleware, async (req, res) => {
   res.json({ paymentMethods });
 });
 
+// get for year and month
+router.get('/api/entries/:year/:month', jwtMiddleware, async (req, res) => {
+  const { year, month } = req.params;
+  const entries = await Entry.aggregate([
+    { $match: { user: mongoose.Types.ObjectId(req.user._id) } },
+    { $match: { year: Number(year), month: Number(month) } }
+  ]).sort({ date: 'desc' });
+  const populatedEntries = await Entry.populate(entries, [
+    { path: 'paymentMethod' },
+    { path: 'category' }
+  ]);
+  res.json({ entries: populatedEntries });
+});
+
 // get single
 router.get('/api/entries/:id', jwtMiddleware, async (req, res) => {
   const [entry] = await Entry.find({ _id: req.params.id, user: req.user })
