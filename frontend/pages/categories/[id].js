@@ -3,9 +3,13 @@ import api from '../../api';
 
 class EditCategory extends React.Component {
   handleSubmit = async newName => {
-    const res = await api.put(`api/categories/${this.props.id}`, {
-      name: newName
-    });
+    const res = await api.put(
+      `api/categories/${this.props.id}`,
+      {
+        name: newName
+      },
+      { headers: { cookie: window.localStorage.getItem('jwt') } }
+    );
     return { status: res.status };
   };
 

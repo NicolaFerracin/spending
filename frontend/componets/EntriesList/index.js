@@ -38,7 +38,9 @@ export default function EntriesList({ entries }) {
   const deleteEntry = async id => {
     const shouldDelete = window.confirm('Are you sure you want to delete this?');
     if (shouldDelete) {
-      await api.delete(`api/entries/${id}`);
+      await api.delete(`api/entries/${id}`, {
+        headers: { cookie: window.localStorage.getItem('jwt') }
+      });
       location.reload();
     }
   };

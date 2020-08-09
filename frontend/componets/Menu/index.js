@@ -15,7 +15,9 @@ const Menu = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await api.get('api/menu');
+      const res = await api.get('api/menu', {
+        haders: { cookie: window.localStorage.getItem('jwt') }
+      });
       setMenu(res.data.menu);
     };
 

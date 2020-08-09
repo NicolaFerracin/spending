@@ -14,7 +14,9 @@ class Categories extends React.Component {
   deleteCategory = async id => {
     const shouldDelete = window.confirm('Are you sure you want to delete this?');
     if (shouldDelete) {
-      api.delete(`api/categories/${id}`);
+      api.delete(`api/categories/${id}`, {
+        headers: { cookie: window.localStorage.getItem('jwt') }
+      });
       location.reload();
     }
   };

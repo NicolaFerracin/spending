@@ -1,7 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import { withRouter } from 'next/router';
-import Cookies from 'js-cookie';
-import Layout from './componets/Layout';
 import api from './api';
 
 const AuthContext = createContext({});
@@ -12,11 +10,11 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function loadUserFromCookies() {
-      const jwt = Cookies.get('jwt');
+      const jwt = window.localStorage.getItem('jwt');
       if (jwt) {
         const {
           data: { user }
-        } = await api.get('profile');
+        } = await api.get('profile', { headers: { cookie: jwt } });
         if (user) {
           setUser(user);
         }
@@ -28,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     window.location.pathname = '/login';
-    Cookies.remove('jwt');
+    window.localStorage.clear('jwt');
     setUser(null);
   };
 

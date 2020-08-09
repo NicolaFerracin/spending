@@ -6,17 +6,15 @@ import '../styles/globals.css';
 export default function MyApp({ Component, pageProps }) {
   const { pathname } = useRouter();
 
-  return (
+  return !pathname.startsWith('/login') ? (
     <AuthProvider>
-      {pathname !== '/login' ? (
-        <ProtectedRoute>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ProtectedRoute>
-      ) : (
-        <Component {...pageProps} />
-      )}
+      <ProtectedRoute>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ProtectedRoute>
     </AuthProvider>
+  ) : (
+    <Component {...pageProps} />
   );
 }

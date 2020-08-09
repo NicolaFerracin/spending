@@ -13,7 +13,9 @@ const PaymentMethods = ({ paymentMethods }) => {
   const deletePaymentMethod = async id => {
     const shouldDelete = window.confirm('Are you sure you want to delete this?');
     if (shouldDelete) {
-      await api.delete(`api/payment-methods/${id}`);
+      await api.delete(`api/payment-methods/${id}`, {
+        headers: { cookie: window.localStorage.getItem('jwt') }
+      });
       location.reload();
     }
   };

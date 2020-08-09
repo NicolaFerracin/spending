@@ -3,7 +3,11 @@ import api from '../../api';
 
 const EditPaymentMethod = ({ id, paymentMethod }) => {
   const handleSubmit = async newName => {
-    const res = await api.put(`api/payment-methods/${id}`, { name: newName });
+    const res = await api.put(
+      `api/payment-methods/${id}`,
+      { name: newName },
+      { headers: { cookie: window.localStorage.getItem('jwt') } }
+    );
     return { status: res.status };
   };
 

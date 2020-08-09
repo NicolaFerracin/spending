@@ -3,7 +3,9 @@ import api from '../../api';
 
 const NewEntry = ({ categories, paymentMethods }) => {
   const handleSubmit = async newEntry => {
-    const res = await api.post('api/entries', newEntry);
+    const res = await api.post('api/entries', newEntry, {
+      headers: { cookie: window.localStorage.getItem('jwt') }
+    });
     return { status: res.status };
   };
 
