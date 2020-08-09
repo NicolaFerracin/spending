@@ -20,7 +20,7 @@ router.get('/auth/callback', passport.authenticate('google'), (req, res) => {
   const { _id, email, name } = req.user;
   const token = jwt.sign({ _id, email, name }, process.env.JWT_SECRET, { expiresIn: '7d' });
   res.cookie('jwt', token);
-  res.redirect(process.env.FRONTEND_URL);
+  res.redirect(`${process.env.FRONTEND_URL}/login/callback/${token}`);
 });
 
 router.get('/profile', jwtMiddleware, (req, res) => {
