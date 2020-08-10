@@ -1,9 +1,23 @@
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import EntriesList from '../../componets/EntriesList';
 import AddButton from '../../componets/AddButton';
 import api from '../../api';
 
-const Entries = ({ entries }) => {
+export default function Entries() {
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await api.get('api/entries', {
+        haders: { cookie: window.localStorage.getItem('jwt') }
+      });
+      setEntries(res.data.entries);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <h1>Entries</h1>
@@ -15,21 +29,4 @@ const Entries = ({ entries }) => {
       </Link>
     </>
   );
-};
-
-export default Entries;
-
-export async function getServerSideProps(ctx) {
-  const cookie = ctx.req?.headers?.cookie;
-  let entries = [];
-  if (cookie) {
-    const res = await api.get('api/entries', {
-      headers: { cookie }
-    });
-    entries = res.data.entries;
-  }
-
-  return {
-    props: { entries }
-  };
 }

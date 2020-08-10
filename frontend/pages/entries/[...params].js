@@ -1,10 +1,30 @@
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import EntriesList from '../../componets/EntriesList';
 import AddButton from '../../componets/AddButton';
 import { MONTHS } from '../../utils';
 import api from '../../api';
 
-const Editentry = ({ year, month, entries }) => {
+export default function Editentry() {
+  const {
+    query: {
+      params: [year, month]
+    }
+  } = useRouter();
+  const [entries, setEntries] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await api.get(`api/entries/${year}/${month}`, {
+        headers: { cookie: window.localStorage.getItem('jwt') }
+      });
+      setEntries(res.data.entries);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <h1>
@@ -18,22 +38,4 @@ const Editentry = ({ year, month, entries }) => {
       </Link>
     </>
   );
-};
-
-export default Editentry;
-
-export async function getServerSideProps({ query, req }) {
-  const [year, month] = query.params;
-  const cookie = req.headers?.cookie;
-  let entries = [];
-  if (cookie) {
-    const res = await api.get(`api/entries/${year}/${month}`, {
-      headers: { cookie }
-    });
-    entries = res.data.entries;
-  }
-
-  return {
-    props: { entries, year, month }
-  };
 }

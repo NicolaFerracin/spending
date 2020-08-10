@@ -1,7 +1,7 @@
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AddButton from '../../componets/AddButton';
 import Table from '../../componets/Table';
-import Layout from '../../componets/Layout';
 import Svg from '../../componets/Svg';
 import api from '../../api';
 
@@ -10,8 +10,21 @@ const COLS = [
   { id: 'actions', header: 'Actions', order: 2 }
 ];
 
-class Categories extends React.Component {
-  deleteCategory = async id => {
+export default function Categories() {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await api.get('api/categories', {
+        haders: { cookie: window.localStorage.getItem('jwt') }
+      });
+      setCategories(res.data.categories);
+    };
+
+    fetchData();
+  }, []);
+
+  const deleteCategory = async id => {
     const shouldDelete = window.confirm('Are you sure you want to delete this?');
     if (shouldDelete) {
       api.delete(`api/categories/${id}`, {
@@ -21,52 +34,31 @@ class Categories extends React.Component {
     }
   };
 
-  render() {
-    return (
-      <>
-        <h1>Categories</h1>
-        <Table
-          cols={COLS}
-          data={this.props?.categories?.map(c => ({
-            id: c._id,
-            name: c.name,
-            actions: (
-              <>
-                <Link href="/categories/[id]" as={`/categories/${c._id}`}>
-                  <a>
-                    <Svg.Edit />
-                  </a>
-                </Link>
-                <Svg.Delete onClick={() => this.deleteCategory(c._id)} />
-              </>
-            )
-          }))}
-        />
-        <Link href="/categories/new">
-          <a>
-            <AddButton />
-          </a>
-        </Link>
-      </>
-    );
-  }
-}
-
-Categories.Layout = Layout;
-
-export default Categories;
-
-export async function getServerSideProps(ctx) {
-  const cookie = ctx.req?.headers?.cookie;
-  let categories = [];
-  if (cookie) {
-    const res = await api.get('api/categories', {
-      headers: { cookie }
-    });
-    categories = res.data.categories;
-  }
-
-  return {
-    props: { categories }
-  };
+  return (
+    <>
+      <h1>Categories</h1>
+      <Table
+        cols={COLS}
+        data={categories.map(c => ({
+          id: c._id,
+          name: c.name,
+          actions: (
+            <>
+              <Link href="/categories/[id]" as={`/categories/${c._id}`}>
+                <a>
+                  <Svg.Edit />
+                </a>
+              </Link>
+              <Svg.Delete onClick={() => deleteCategory(c._id)} />
+            </>
+          )
+        }))}
+      />
+      <Link href="/categories/new">
+        <a>
+          <AddButton />
+        </a>
+      </Link>
+    </>
+  );
 }

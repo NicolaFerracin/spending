@@ -79,7 +79,6 @@ router.get(
   '/api/entries/:id',
   jwtMiddleware,
   catchErrors(async (req, res) => {
-    console.log('passin here', req.params.id);
     const [entry] = await Entry.find({ _id: req.params.id, user: req.user })
       .populate('paymentMethod')
       .populate('category');

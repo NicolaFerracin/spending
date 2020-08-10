@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Table from '../../componets/Table';
 import Svg from '../../componets/Svg';
@@ -9,7 +10,20 @@ const COLS = [
   { id: 'actions', header: 'Actions', order: 2 }
 ];
 
-const PaymentMethods = ({ paymentMethods }) => {
+export default function PaymentMethods() {
+  const [paymentMethods, setPaymentMethods] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await api.get('api/payment-methods', {
+        haders: { cookie: window.localStorage.getItem('jwt') }
+      });
+      setPaymentMethods(res.data.paymentMethods);
+    };
+
+    fetchData();
+  }, []);
+
   const deletePaymentMethod = async id => {
     const shouldDelete = window.confirm('Are you sure you want to delete this?');
     if (shouldDelete) {
@@ -47,21 +61,4 @@ const PaymentMethods = ({ paymentMethods }) => {
       </Link>
     </>
   );
-};
-
-export default PaymentMethods;
-
-export async function getServerSideProps(ctx) {
-  const cookie = ctx.req?.headers?.cookie;
-  let paymentMethods = [];
-  if (cookie) {
-    const res = await api.get('api/payment-methods', {
-      headers: { cookie }
-    });
-    paymentMethods = res.data.paymentMethods;
-  }
-
-  return {
-    props: { paymentMethods }
-  };
 }

@@ -15,7 +15,6 @@ const COLS = [
 const groupEntriesByDate = entries =>
   entries.reduce((entriesByDate, entry) => {
     const date = `${entry.day}-${entry.month - 1}-${entry.year}`;
-    console.log(date);
     if (entriesByDate[date]) {
       entriesByDate[date].entries.push(entry);
       entriesByDate[date].sum += entry.amount;
@@ -47,9 +46,8 @@ export default function EntriesList({ entries }) {
 
   const entriesBydate = groupEntriesByDate(entries);
 
-  console.log(entriesBydate);
   return Object.keys(entriesBydate).map(date => (
-    <>
+    <div key={date}>
       <h3 className={styles.heading}>
         {new Date(...date.split('-').reverse()).toLocaleDateString('en', dateOptions)}
         <span className={styles.textRight}>Spent: {entriesBydate[date].sum}€</span>
@@ -75,6 +73,6 @@ export default function EntriesList({ entries }) {
           )
         }))}
       />
-    </>
+    </div>
   ));
 }
