@@ -67,7 +67,13 @@ export default function EntriesList({ entries }) {
                   <Svg.Edit />
                 </a>
               </Link>
-              <Svg.Copy />
+              <Link
+                href={`/entries/new?name=${e.name}&amount=${e.amount}&categoryId=${e.category._id}&paymentMethodId=${e.paymentMethod._id}&date=${e.date}`}
+              >
+                <a>
+                  <Svg.Copy />
+                </a>
+              </Link>
               <Svg.Delete onClick={() => deleteEntry(e._id)} />
             </>
           )

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import EntryForm from '../../componets/EntryForm';
 import api from '../../api';
 
 export default function NewEntry() {
+  const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
 
@@ -33,6 +35,7 @@ export default function NewEntry() {
     <>
       <h1>New Entry</h1>
       <EntryForm
+        {...router.query}
         handleSubmit={handleSubmit}
         categories={categories}
         paymentMethods={paymentMethods}

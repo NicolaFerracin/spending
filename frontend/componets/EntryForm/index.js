@@ -11,8 +11,8 @@ export default class EntryForm extends Component {
       id: props.id,
       name: props.name || '',
       amount: props.amount || '',
-      paymentMethod: props.paymentMethod?._id || '',
-      category: props.category?._id || '',
+      paymentMethod: props.paymentMethodId || props.paymentMethod?._id || '',
+      category: props.categoryId || props.category?._id || '',
       date: formatDateForInput(props.date ? new Date(props.date) : new Date())
     };
   }
