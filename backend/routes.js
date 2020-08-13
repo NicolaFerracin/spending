@@ -212,26 +212,17 @@ router.get(
   catchErrors(async (req, res) => {
     const menu = await Entry.aggregate([
       { $match: { user: mongoose.Types.ObjectId(req.user._id) } },
-      { $group: { _id: '$date' } },
+      {
+        $group: {
+          _id: '$year',
+          months: { $addToSet: '$month' }
+        }
+      },
       {
         $project: {
-          year: { $dateToString: { format: '%Y', date: '$_id' } },
-          month: { $dateToString: { format: '%m', date: '$_id' } }
-        }
-      },
-      {
-        $group: {
-          _id: { year: '$year', month: '$month' }
-        }
-      },
-      {
-        $group: {
-          _id: '$_id.year',
-          months: {
-            $push: {
-              month: '$_id.month'
-            }
-          }
+          _id: false,
+          year: '$_id',
+          months: '$months'
         }
       }
     ]).sort({ _id: 'desc' });

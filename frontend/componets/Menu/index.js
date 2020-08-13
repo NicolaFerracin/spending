@@ -57,7 +57,7 @@ const Menu = () => {
               <a>Payment Methods</a>
             </Link>
           </li>
-          {menu.map(({ _id: year, months }) => (
+          {menu.map(({ year, months }) => (
             <li
               key={year}
               className={`${styles.li} ${
@@ -71,8 +71,8 @@ const Menu = () => {
               <ul>
                 {!dropdowns.includes(Number(year)) &&
                   months
-                    .sort((a, b) => b.month - a.month)
-                    .map(({ month }) => (
+                    .sort((a, b) => b - a)
+                    .map(month => (
                       <li
                         key={month}
                         className={`${styles.li} ${
