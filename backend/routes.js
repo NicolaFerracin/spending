@@ -230,4 +230,50 @@ router.get(
   })
 );
 
+router.get(
+  '/api/stats',
+  jwtMiddleware,
+  catchErrors(async (req, res) => {
+    const data = await Entry.aggregate([
+      { $match: { user: mongoose.Types.ObjectId(req.user._id) } },
+      {
+        $group: {
+          _id: { month: '$month', year: '$year' },
+          total: { $sum: '$amount' }
+        }
+      },
+      {
+        $project: {
+          _id: false,
+          month: '$_id.month',
+          year: '$_id.year',
+          total: '$total'
+        }
+      }
+    ]);
+
+    const byMonth = data.reduce((acc, el) => {
+      if (!!acc[el.year]) {
+        acc[el.year][el.month] = el.total;
+      } else {
+        acc[el.year] = { [el.month]: el.total };
+      }
+      return acc;
+    }, {});
+
+    let total = 0;
+    const byYear = data.reduce((acc, el) => {
+      if (!!acc[el.year]) {
+        acc[el.year] += el.total;
+      } else {
+        acc[el.year] = el.total;
+      }
+      total += el.total;
+      return acc;
+    }, {});
+
+    res.json({ byMonth, byYear, total });
+  })
+);
+
 module.exports = router;
