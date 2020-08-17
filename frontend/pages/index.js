@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api';
-import styles from './index.module.scss';
+import StatsByYear from '../componets/StatsByYear';
+import styles from './styles.module.scss';
 
 export default function Home() {
   const [stats, setStats] = useState({});
@@ -25,32 +26,49 @@ export default function Home() {
     }
   };
 
-  console.log(stats);
+  if (!stats.total) {
+    return null;
+  }
 
   const today = new Date();
+  const years = Object.keys(stats.byYear).sort((a, b) => b - a);
+
   return (
     <div>
       <h1>Stats</h1>
-      {!!stats.total && (
+      {
         <>
-          <h2>Overall: {stats.total}€</h2>
-          <h2>This year: {stats.byYear[today.getFullYear()]}€</h2>
-          <h2>This month: {stats.byMonth[today.getFullYear()][today.getMonth() + 1]}€</h2>
-          <h2>Average per month: {stats.byYear[today.getFullYear()] / today.getMonth() + 1}€</h2>
+          <div className={styles.stats}>
+            <div className={styles.stat}>
+              <span>Overall</span>
+              <span>{stats.total}€</span>
+            </div>
+            <div className={styles.stat}>
+              <span>This year</span>
+              <span>{stats.byYear[today.getFullYear()]}€</span>
+            </div>
+            <div className={styles.stat}>
+              <span>This month</span>
+              <span>{stats.byMonth[today.getFullYear()][today.getMonth() + 1]}€</span>
+            </div>
+            <div className={styles.stat}>
+              <span>Average per month</span>
+              <span>{stats.byYear[today.getFullYear()] / (today.getMonth() + 1)}€</span>
+            </div>
+          </div>
           <hr />
-          {Object.keys(stats.byYear)
-            .sort((a, b) => b - a)
-            .map(year => (
-              <>
-                <h3 className={styles.toggle} onClick={() => toggle(year)}>
-                  <span>+</span> {year}
-                </h3>
-                {toggles.includes(year) && <div>Chart</div>}
-                <hr />
-              </>
-            ))}
+          {years.map(year => (
+            <StatsByYear
+              key={year}
+              toggle={toggle}
+              year={year}
+              data={stats.byMonth[year]}
+              total={stats.byYear[year]}
+              shouldDisplay={toggles.includes(year)}
+            />
+          ))}
         </>
-      )}
+      }
     </div>
   );
 }

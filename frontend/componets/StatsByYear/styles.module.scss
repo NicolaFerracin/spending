@@ -1,0 +1,39 @@
+.toggle {
+  cursor: pointer;
+
+  &.open:before {
+    content: '- ';
+  }
+
+  &.closed:before {
+    content: '+ ';
+  }
+}
+
+.stats {
+  display: flex;
+  margin-bottom: 50px;
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+
+    &:not(:last-of-type) {
+      border-right: 1px solid black;
+      padding-right: 15px;
+    }
+
+    &:not(:first-of-type) {
+      padding-left: 15px;
+    }
+
+    span:first-of-type {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    span:nth-of-type(2) {
+      font-size: 1.4rem;
+    }
+  }
+}
