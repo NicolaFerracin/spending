@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import Svg from '../../componets/Svg';
-import Table from '../../componets/Table';
+import Svg from '../Svg';
+import Table from '../Table';
+import Amount from '../Amount';
 import api from '../../api';
 import styles from './styles.module.scss';
 
@@ -50,14 +51,16 @@ export default function EntriesList({ entries }) {
     <div key={date}>
       <h3 className={styles.heading}>
         {new Date(...date.split('-').reverse()).toLocaleDateString('en', dateOptions)}
-        <span className={styles.textRight}>Spent: {entriesBydate[date].sum}€</span>
+        <span className={styles.textRight}>
+          Spent: <Amount value={entriesBydate[date].sum} />
+        </span>
       </h3>
       <Table
         cols={COLS}
         data={entriesBydate[date].entries.map(e => ({
           id: e._id,
           name: e.name,
-          amount: e.amount,
+          amount: <Amount value={e.amount} />,
           category: e.category.name,
           paymentMethod: e.paymentMethod.name,
           actions: (

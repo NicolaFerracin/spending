@@ -1,5 +1,6 @@
 import { Line } from 'react-chartjs-2';
 import { MONTHS } from '../../utils';
+import Amount from '../Amount';
 import styles from './styles.module.scss';
 
 const chartOptions = {
@@ -53,11 +54,15 @@ export default function StatsByYear({ year, data, total, toggle, shouldDisplay }
           <div className={styles.stats}>
             <div className={styles.stat}>
               <span>Total</span>
-              <span>{total}€</span>
+              <span>
+                <Amount value={total} />
+              </span>
             </div>
             <div className={styles.stat}>
               <span>Average per month</span>
-              <span>{total / getMonths(data).pop()}€</span>
+              <span>
+                <Amount value={total / getMonths(data).pop()} />
+              </span>
             </div>
           </div>
           <Line data={getChartData(data)} options={chartOptions} />
