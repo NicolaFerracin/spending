@@ -80,7 +80,7 @@ const Menu = () => {
                         }`}
                       >
                         <Link href="/entries/[...params]" as={`/entries/${year}/${month}`}>
-                          <a>{MONTHS[Number(month) - 1].substr(0, 3)}</a>
+                          <a>{MONTHS[Number(month) - 1]?.substr(0, 3)}</a>
                         </Link>
                       </li>
                     ))}
